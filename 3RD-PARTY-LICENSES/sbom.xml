@@ -1,0 +1,21 @@
+<attributionReport>
+   <dependencies>
+      <dependency>
+         <name>Project Lombok</name>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.18.20</version>
+         <projectUrl>https://projectlombok.org</projectUrl>
+         <type>jar</type>
+         <licenses>
+            <license>
+               <name>The MIT License</name>
+               <url>https://projectlombok.org/LICENSE</url>
+            </license>
+         </licenses>
+         <downloadUrls>
+            <string>https://repo.maven.apache.org/maven2/org/projectlombok/lombok/1.18.20/lombok-1.18.20.jar</string>
+         </downloadUrls>
+      </dependency>
+   </dependencies>
+</attributionReport>
