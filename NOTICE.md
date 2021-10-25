@@ -13,5 +13,5 @@ file in the Carbyne Stack
 
 - Becker Sebastian <sebastian.becker@de.bosch.com>
 - Duplys Paul <paul.duplys@de.bosch.com>
-- David Greven <fixed-term.David.Greven@de.bosch.com>
+- Greven David <fixed-term.David.Greven@de.bosch.com>
 - Trieflinger Sven <sven.trieflinger@de.bosch.com>
