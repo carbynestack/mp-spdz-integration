@@ -8,47 +8,76 @@ package io.carbynestack.mpspdz.integration;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import lombok.NonNull;
-import lombok.Value;
 
-/** Enables conversion from BigInteger to the MP-SPDZ internal representation and vice versa. */
-@Value(staticConstructor = "of")
-public class MpSpdzIntegrationUtils {
+import static java.util.Objects.requireNonNull;
 
-  /** Modulus N as used by the MP-SPDZ implementation */
-  @NonNull BigInteger prime;
-
-  /** Auxiliary modulus R as used by the MP-SPDZ implementation */
-  @NonNull BigInteger r;
-
-  /** Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ implementation */
-  @NonNull BigInteger rInv;
-
-  /** The size of a limb in the MP-SPDZ runtime. */
+/**
+ * Enables conversion from BigInteger to the MP-SPDZ internal representation and vice versa.
+ */
+public final class MpSpdzIntegrationUtils {
+  /**
+   * The size of a limb in the MP-SPDZ runtime.
+   */
   public static final int LIMB_WIDTH = 8;
-
-  /** The size of a word in the MP-SPDZ runtime. */
+  /**
+   * The size of a word in the MP-SPDZ runtime.
+   */
   public static final int WORD_WIDTH = 2 * LIMB_WIDTH;
-
-  /** The size of a share (value, MAC) in the MP-SPDZ runtime. Equals two times the word width. */
+  /**
+   * The size of a share (value, MAC) in the MP-SPDZ runtime. Equals two times the word width.
+   */
   public static final int SHARE_WIDTH = 2 * WORD_WIDTH;
+  /**
+   * Modulus N as used by the MP-SPDZ implementation
+   */
+  private final BigInteger prime;
+  /**
+   * Auxiliary modulus R as used by the MP-SPDZ implementation
+   */
+  private final BigInteger r;
+  /**
+   * Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ implementation
+   */
+  private final BigInteger rInv;
+
+  private MpSpdzIntegrationUtils(BigInteger prime, BigInteger r, BigInteger rInv) {
+    this.prime = requireNonNull(prime);
+    this.r = requireNonNull(r);
+    this.rInv = requireNonNull(rInv);
+  }
+
+  public static MpSpdzIntegrationUtils of(BigInteger prime, BigInteger r, BigInteger rInv) {
+    return new MpSpdzIntegrationUtils(prime, r, rInv);
+  }
+
+  public BigInteger getPrime() {
+    return prime;
+  }
+
+  public BigInteger getR() {
+    return r;
+  }
+
+  public BigInteger getRInv() {
+    return rInv;
+  }
 
   /**
    * Converts a number given as a BigInteger to the MP-SPDZ internal representation.
    *
    * @param value The value to convert. Must be positive.
    * @return The MP-SPDZ internal representation of the value ({@link
-   *     MpSpdzIntegrationUtils#WORD_WIDTH} bytes).
+   * MpSpdzIntegrationUtils#WORD_WIDTH} bytes).
    * @throws IllegalArgumentException If the given value is negative or larger than the configured
-   *     prime.
+   *                                  prime.
    */
   public byte[] toGfp(BigInteger value) {
     if (value.compareTo(prime) > 0)
       throw new IllegalArgumentException(
-          String.format("Value must not be larger than %s. Actual: %s.", prime, value));
+              String.format("Value must not be larger than %s. Actual: %s.", prime, value));
     if (0 > value.signum())
       throw new IllegalArgumentException(
-          String.format("Value must not be negative. Actual: %s.", value));
+              String.format("Value must not be negative. Actual: %s.", value));
     byte[] montBytes = fromIntToMont(value);
     byte[] invertedMont = invertLimbEndianness(montBytes);
     return swapLimbs(invertedMont);
@@ -58,16 +87,16 @@ public class MpSpdzIntegrationUtils {
    * Converts a number in MP-SPDZ internal representation into a number given as a string.
    *
    * @param gfp The MP-SPDZ internal representation of the value ({@link
-   *     MpSpdzIntegrationUtils#WORD_WIDTH} bytes).
+   *            MpSpdzIntegrationUtils#WORD_WIDTH} bytes).
    * @return The value as a BigInteger. Is always positive.
    * @throws IllegalArgumentException In case the the array is not of the required size.
    */
   public BigInteger fromGfp(byte[] gfp) {
     if (gfp.length != WORD_WIDTH)
       throw new IllegalArgumentException(
-          String.format(
-              "Gfp byte representation must have a length of %s. Actual: %s.",
-              WORD_WIDTH, gfp.length));
+              String.format(
+                      "Gfp byte representation must have a length of %s. Actual: %s.",
+                      WORD_WIDTH, gfp.length));
     byte[] inverted = invertLimbEndianness(gfp);
     byte[] swapped = swapLimbs(inverted);
     return fromMontToInt(swapped);
@@ -97,9 +126,9 @@ public class MpSpdzIntegrationUtils {
    * little-endian byte order so the values can be used by the MP-SPDZ implementation again.
    *
    * @param input Byte array containing one or more multiprecision integers each stored in two
-   *     8-byte limbs.
+   *              8-byte limbs.
    * @return A new byte Array containing the numbers stored in two 8-byte limbs in the reverse byte
-   *     order
+   * order
    */
   private byte[] invertLimbEndianness(byte[] input) {
     byte[] fixed = new byte[WORD_WIDTH];
@@ -119,7 +148,7 @@ public class MpSpdzIntegrationUtils {
    * `limb[1], limb[0]`.
    *
    * @param input Byte Array containing one or more multiprecision integers each stored in two
-   *     8-byte limbs
+   *              8-byte limbs
    * @return A new byte Array containing the limbs in 'correct' order
    */
   private byte[] swapLimbs(byte[] input) {
@@ -134,7 +163,7 @@ public class MpSpdzIntegrationUtils {
    * p and auxiliary modulus R) to a BigInteger (modulo n).
    *
    * @param value Byte array containing an integer represented in Montgomery form with respect to
-   *     modulus p and auxiliary modulus R used by the MP-SPDZ implementation
+   *              modulus p and auxiliary modulus R used by the MP-SPDZ implementation
    * @return BigInteger representation of input value
    */
   private BigInteger fromMontToInt(byte[] value) {
@@ -150,18 +179,18 @@ public class MpSpdzIntegrationUtils {
    *
    * @param num BigInteger to be converted to the MP-SPDZ Montgomery form
    * @return BigInteger containing the integer represented in its Montgomery form with respect to
-   *     modulus p and auxiliary modulus R used by the MP-SPDZ implementation
+   * modulus p and auxiliary modulus R used by the MP-SPDZ implementation
    */
   private byte[] fromIntToMont(BigInteger num) {
     byte[] montBytes = num.multiply(r).mod(prime).toByteArray();
     byte[] bytes = new byte[WORD_WIDTH];
     // Trim byte array to WORD_WIDTH
     System.arraycopy(
-        montBytes,
-        montBytes.length > WORD_WIDTH ? montBytes.length - WORD_WIDTH : 0,
-        bytes,
-        montBytes.length >= WORD_WIDTH ? 0 : WORD_WIDTH - montBytes.length,
-        Math.min(montBytes.length, WORD_WIDTH));
+            montBytes,
+            montBytes.length > WORD_WIDTH ? montBytes.length - WORD_WIDTH : 0,
+            bytes,
+            montBytes.length >= WORD_WIDTH ? 0 : WORD_WIDTH - montBytes.length,
+            Math.min(montBytes.length, WORD_WIDTH));
     return bytes;
   }
 }
