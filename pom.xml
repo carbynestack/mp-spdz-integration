@@ -50,28 +50,22 @@
         <maven-jacoco-plugin.version>0.8.7</maven-jacoco-plugin.version>
         <maven-license-plugin.version>2.0.0</maven-license-plugin.version>
 
-        <!-- Test dependency versions -->
-        <junit.version>5.8.1</junit.version>
-        <assertj.version>3.21.0</assertj.version>
+        <!-- External dependency versions -->
+        <lombok.version>1.18.20</lombok.version>
+        <junit.version>4.13.2</junit.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+
         <!--Test dependencies-->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
