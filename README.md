@@ -14,12 +14,6 @@ This project provides utilities for using
 Carbyne Stack *MP-SPDZ Integration Utilities* is open-sourced under the Apache
 License 2.0. See the [LICENSE](LICENSE) file for details.
 
-### 3rd Party Licenses
-
-For information on how license obligations for 3rd party OSS dependencies are
-fulfilled see the [README](https://github.com/carbynestack/carbynestack) file of
-the Carbyne Stack repository.
-
 ## Contributing
 
 Please see the Carbyne Stack
