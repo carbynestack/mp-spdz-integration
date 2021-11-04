@@ -7,30 +7,26 @@
 package io.carbynestack.mpspdz.integration;
 
 import static io.carbynestack.mpspdz.integration.TestTriple.loadFromResources;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
-import org.hamcrest.CoreMatchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MpSpdzIntegrationUtilsTest {
-
   private static final Random RANDOM = new Random(42);
   private static final int REPETITIONS = 100000;
   private static final BigInteger PRIME = new BigInteger("198766463529478683931867765928436695041");
   private static final BigInteger R = new BigInteger("141515903391459779531506841503331516415");
   private static final BigInteger R_INV = new BigInteger("133854242216446749056083838363708373830");
-
-  private List<TestTriple> gfpTestData;
-
   private final MpSpdzIntegrationUtils mpSpdzIntegrationUtils =
       MpSpdzIntegrationUtils.of(PRIME, R, R_INV);
+  private List<TestTriple> gfpTestData;
 
-  @Before
+  @BeforeEach
   public void loadGfpData() throws Exception {
     gfpTestData =
         loadFromResources("/GfpTestData", "/BigIntTestData", mpSpdzIntegrationUtils.getPrime());
@@ -38,58 +34,50 @@ public class MpSpdzIntegrationUtilsTest {
 
   @Test
   public void givenConfiguredUtils_whenGettingParameters_thenReturnExpectedValues() {
-    assertEquals(PRIME, mpSpdzIntegrationUtils.getPrime());
-    assertEquals(R, mpSpdzIntegrationUtils.getR());
-    assertEquals(R_INV, mpSpdzIntegrationUtils.getRInv());
+    assertThat(mpSpdzIntegrationUtils.getPrime()).isEqualTo(PRIME);
+    assertThat(mpSpdzIntegrationUtils.getR()).isEqualTo(R);
+    assertThat(mpSpdzIntegrationUtils.getRInv()).isEqualTo(R_INV);
   }
 
   @Test
   public void givenTestTriples_whenConvertingFromGfp_thenReturnCorrectOutput() {
     for (TestTriple testTriple : gfpTestData) {
-      assertEquals(
-          "Converted value does not match actual value.",
-          testTriple.getValue(),
-          mpSpdzIntegrationUtils.fromGfp(testTriple.getGfp()));
+      assertThat(mpSpdzIntegrationUtils.fromGfp(testTriple.getGfp()))
+          .as("Converted value does not match actual value.")
+          .isEqualTo(testTriple.getValue());
     }
   }
 
   @Test
   public void givenArrayOfWrongLength_whenConvertingFromGfp_thenTrow() {
-    IllegalArgumentException iae =
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> mpSpdzIntegrationUtils.fromGfp(new byte[] {4, 2}));
-    assertThat(iae.getMessage(), CoreMatchers.containsString("must have a length of"));
+    assertThatThrownBy(() -> mpSpdzIntegrationUtils.fromGfp(new byte[] {4, 2}))
+        .isExactlyInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("must have a length of");
   }
 
   @Test
   public void givenTestTriples_whenConvertingToGfp_thenReturnCorrectOutput() {
     for (TestTriple testTriple : gfpTestData) {
-      assertArrayEquals(
-          "Converted byte data does not match actual spdz representation.",
-          testTriple.getGfp(),
-          mpSpdzIntegrationUtils.toGfp(testTriple.getValue()));
+      assertThat(mpSpdzIntegrationUtils.toGfp(testTriple.getValue()))
+          .as("Converted byte data does not match actual spdz representation.")
+          .isEqualTo(testTriple.getGfp());
     }
   }
 
   @Test
   public void givenNegativeValue_whenConvertingToGfp_thenThrow() {
-    IllegalArgumentException iae =
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> mpSpdzIntegrationUtils.toGfp(BigInteger.ONE.negate()));
-    assertThat(iae.getMessage(), CoreMatchers.containsString("must not be negative"));
+    assertThatThrownBy(() -> mpSpdzIntegrationUtils.toGfp(BigInteger.ONE.negate()))
+        .isExactlyInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("must not be negative");
   }
 
   @Test
   public void givenValueGreaterThanPrime_whenConvertingToGfp_thenThrow() {
-    IllegalArgumentException iae =
-        assertThrows(
-            IllegalArgumentException.class,
+    assertThatThrownBy(
             () ->
-                mpSpdzIntegrationUtils.toGfp(
-                    mpSpdzIntegrationUtils.getPrime().add(BigInteger.ONE)));
-    assertThat(iae.getMessage(), CoreMatchers.containsString("must not be larger"));
+                mpSpdzIntegrationUtils.toGfp(mpSpdzIntegrationUtils.getPrime().add(BigInteger.ONE)))
+        .isExactlyInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("must not be larger");
   }
 
   @Test
@@ -97,8 +85,9 @@ public class MpSpdzIntegrationUtilsTest {
     for (int i = 0; i < REPETITIONS; i++) {
       long v = Math.abs(RANDOM.nextLong());
       byte[] gfp = mpSpdzIntegrationUtils.toGfp(BigInteger.valueOf(v));
-      assertEquals(
-          "Roundtrip does not preserve value.", v, mpSpdzIntegrationUtils.fromGfp(gfp).longValue());
+      assertThat(mpSpdzIntegrationUtils.fromGfp(gfp).longValue())
+          .as("Roundtrip does not preserve value.")
+          .isEqualTo(v);
     }
   }
 }

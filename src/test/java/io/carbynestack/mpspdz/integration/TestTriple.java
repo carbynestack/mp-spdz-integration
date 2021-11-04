@@ -6,6 +6,8 @@
  */
 package io.carbynestack.mpspdz.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.junit.Assert;
 
 public class TestTriple {
-
   private final byte[] gfp;
   private final BigInteger value;
   private final BigInteger prime;
@@ -28,14 +28,6 @@ public class TestTriple {
     this.gfp = gfp;
     this.value = value;
     this.prime = prime;
-  }
-
-  public byte[] getGfp() {
-    return gfp;
-  }
-
-  public BigInteger getValue() {
-    return value.mod(prime);
   }
 
   private static byte[] readGfp(InputStream is, int length) throws IOException {
@@ -61,9 +53,12 @@ public class TestTriple {
     try (InputStream gfpTripleStream = TestTriple.class.getResourceAsStream(gfpTriplesName);
         InputStream humanTripleStream =
             TestTriple.class.getResourceAsStream(humanReadableTriplesName)) {
-      Assert.assertNotNull("Resource containing GFp triples can not be opened", gfpTripleStream);
-      Assert.assertNotNull(
-          "Resource containing human readable triples can not be opened", humanTripleStream);
+      assertThat(gfpTripleStream)
+          .as("Resource containing GFp triples can not be opened")
+          .isNotNull();
+      assertThat(humanTripleStream)
+          .as("Resource containing human readable triples can not be opened")
+          .isNotNull();
       byte[] gfp;
       while ((gfp = readGfp(gfpTripleStream, MpSpdzIntegrationUtils.WORD_WIDTH)) != null) {
         gfps.add(gfp);
@@ -74,14 +69,21 @@ public class TestTriple {
       while ((line = br.readLine()) != null) {
         humanReadableValues.add(new BigInteger(line.trim()));
       }
-      Assert.assertEquals(
-          "Number of read GFp values does not match number of human readable values",
-          gfps.size(),
-          humanReadableValues.size());
+      assertThat(humanReadableValues.size())
+          .as("Number of read GFp values does not match number of human readable values")
+          .isEqualTo(gfps.size());
     }
     return IntStream.range(0, gfps.size())
         .boxed()
         .map(i -> new TestTriple(gfps.get(i), humanReadableValues.get(i), prime))
         .collect(Collectors.toList());
+  }
+
+  public byte[] getGfp() {
+    return gfp;
+  }
+
+  public BigInteger getValue() {
+    return value.mod(prime);
   }
 }
