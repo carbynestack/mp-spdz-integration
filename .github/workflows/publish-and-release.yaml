@@ -7,7 +7,7 @@
 name: Publish and release
 on:
   workflow_run:
-    workflows: ["Build and test artifacts"]
+    workflows: [ "Build and test artifacts" ]
     branches:
       - master
     types:
@@ -30,24 +30,13 @@ jobs:
         id: maven-project
   draft-release:
     runs-on: ubuntu-20.04
-    needs: [prepare]
+    needs: [ prepare ]
     env:
       VERSION: "${{ needs.prepare.outputs.VERSION }}"
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Retrieve license obligation resources
-        run: |
-          cd 3RD-PARTY-LICENSES
-          find . -maxdepth 1 -type d -not -path . | zip -r@ ${GITHUB_REPOSITORY#*/}-3rd-party-copyrights
-          find . -iname origin.src | \
-          awk '{ \
-          split($0,b,"/"); \
-          system("xargs < " $0 " curl --create-dirs -Lo ./sources/" b[2] ".zip " $2)}' && \
-          find -regex './sources$' | awk '{system("zip -jr ./${GITHUB_REPOSITORY#*/}-3rd-party-sources.zip " $0)}'
-          mkdir -p ../license-obligations && mv `find . -regex "^./${GITHUB_REPOSITORY#*/}-3rd-party-.*.zip$"` ../license-obligations/
-          cd -
       - name: Generate change log
         run: |
           chmod +x .github/scripts/generate-changelog.sh
@@ -62,10 +51,9 @@ jobs:
           tag: ${{ env.VERSION }}
           draft: true
           bodyFile: /tmp/cs.repository-changelog.${{ env.VERSION }}
-          artifacts: "license-obligations/*"
   publish:
     runs-on: ubuntu-20.04
-    needs: [prepare,draft-release]
+    needs: [ prepare,draft-release ]
     env:
       VERSION: "${{ needs.prepare.outputs.VERSION }}"
     steps:
