@@ -51,16 +51,9 @@
         <maven-license-plugin.version>2.0.0</maven-license-plugin.version>
 
         <!-- External dependency versions -->
-        <lombok.version>1.18.20</lombok.version>
         <junit.version>4.13.2</junit.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
-
         <!--Test dependencies-->
         <dependency>
             <groupId>junit</groupId>

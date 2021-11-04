@@ -6,32 +6,80 @@
  */
 package io.carbynestack.mpspdz.integration;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigInteger;
 import java.util.Arrays;
-import lombok.NonNull;
-import lombok.Value;
 
 /** Enables conversion from BigInteger to the MP-SPDZ internal representation and vice versa. */
-@Value(staticConstructor = "of")
-public class MpSpdzIntegrationUtils {
-
-  /** Modulus N as used by the MP-SPDZ implementation */
-  @NonNull BigInteger prime;
-
-  /** Auxiliary modulus R as used by the MP-SPDZ implementation */
-  @NonNull BigInteger r;
-
-  /** Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ implementation */
-  @NonNull BigInteger rInv;
-
+public final class MpSpdzIntegrationUtils {
   /** The size of a limb in the MP-SPDZ runtime. */
   public static final int LIMB_WIDTH = 8;
-
   /** The size of a word in the MP-SPDZ runtime. */
   public static final int WORD_WIDTH = 2 * LIMB_WIDTH;
-
   /** The size of a share (value, MAC) in the MP-SPDZ runtime. Equals two times the word width. */
   public static final int SHARE_WIDTH = 2 * WORD_WIDTH;
+  /** Modulus N as used by the MP-SPDZ implementation */
+  private final BigInteger prime;
+  /** Auxiliary modulus R as used by the MP-SPDZ implementation */
+  private final BigInteger r;
+  /** Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ implementation */
+  private final BigInteger rInv;
+
+  /**
+   * Constructs an instance of {@code MpSpdzIntegrationUtils} using prime, r and rInv.
+   *
+   * @param prime Modulus N as used by the MP-SPDZ implementation
+   * @param r Auxiliary modulus R as used by the MP-SPDZ implementation
+   * @param rInv Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ
+   *     implementation
+   */
+  private MpSpdzIntegrationUtils(BigInteger prime, BigInteger r, BigInteger rInv) {
+    this.prime = requireNonNull(prime);
+    this.r = requireNonNull(r);
+    this.rInv = requireNonNull(rInv);
+  }
+
+  /**
+   * Constructs an instance of {@code MpSpdzIntegrationUtils} using prime, r and rInv.
+   *
+   * @param prime Modulus N as used by the MP-SPDZ implementation
+   * @param r Auxiliary modulus R as used by the MP-SPDZ implementation
+   * @param rInv Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ
+   *     implementation
+   * @return an instance of {@code MpSpdzIntegrationUtils}
+   */
+  public static MpSpdzIntegrationUtils of(BigInteger prime, BigInteger r, BigInteger rInv) {
+    return new MpSpdzIntegrationUtils(prime, r, rInv);
+  }
+
+  /**
+   * Returns Modulus N as used by the MP-SPDZ implementation.
+   *
+   * @return {@code this.prime}
+   */
+  public BigInteger getPrime() {
+    return prime;
+  }
+
+  /**
+   * Returns Auxiliary modulus R as used by the MP-SPDZ implementation.
+   *
+   * @return {@code this.r}
+   */
+  public BigInteger getR() {
+    return r;
+  }
+
+  /**
+   * Returns Multiplicative inverse for the auxiliary modulus R as used by the MP-SPDZ
+   * implementation.
+   *
+   * @return {@code this.rInv}
+   */
+  public BigInteger getRInv() {
+    return rInv;
+  }
 
   /**
    * Converts a number given as a BigInteger to the MP-SPDZ internal representation.
