@@ -12,7 +12,7 @@
 
     <artifactId>mp-spdz-integration</artifactId>
     <groupId>io.carbynestack</groupId>
-    <version>${revision}</version>
+    <version>0.2-SNAPSHOT</version>
     <name>Carbyne Stack MP-SPDZ Integration Utilities</name>
     <description>Integration utilities for MP-SPDZ MPC library</description>
 
@@ -46,7 +46,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <revision>0.2-SNAPSHOT</revision>
         <skip.tests>false</skip.tests>
         <java.version>1.8</java.version>
 
