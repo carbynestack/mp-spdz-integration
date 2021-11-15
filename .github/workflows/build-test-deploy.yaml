@@ -28,6 +28,16 @@ jobs:
           java-version: ${{ matrix.jdk.version }}
           distribution: ${{ matrix.jdk.distribution }}
           cache: 'maven'
+      - name: Setting up Github Package Repository as Maven Repository
+        uses: s4u/maven-settings-action@v2
+        with:
+          githubServer: false
+          servers: |
+            [{
+                "id": "github",
+                "username": "${{ secrets.GHPR_USERNAME }}",
+                "password": "${{ secrets.GHPR_TOKEN }}"
+            }]
       - name: Build with Maven
         run: mvn install -Dskip.tests --batch-mode --update-snapshots --no-transfer-progress
   test:
@@ -43,6 +53,16 @@ jobs:
           java-version: ${{ matrix.jdk.version }}
           distribution: ${{ matrix.jdk.distribution }}
           cache: 'maven'
+      - name: Setting up Github Package Repository as Maven Repository
+        uses: s4u/maven-settings-action@v2
+        with:
+          githubServer: false
+          servers: |
+            [{
+                "id": "github",
+                "username": "${{ secrets.GHPR_USERNAME }}",
+                "password": "${{ secrets.GHPR_TOKEN }}"
+            }]
       - name: Run Tests
         run: mvn verify --activate-profiles coverage --batch-mode --no-transfer-progress
       - name: Collect Jacoco reports
