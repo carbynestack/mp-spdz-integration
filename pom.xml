@@ -50,6 +50,9 @@
         <maven-jacoco-plugin.version>0.8.7</maven-jacoco-plugin.version>
         <maven-license-plugin.version>2.0.0</maven-license-plugin.version>
 
+        <!-- Carbyne Stack dependency versions -->
+        <common.version>0.1-SNAPSHOT-1452592126-1-135764e</common.version>
+
         <!-- Test dependency versions -->
         <junit.version>5.8.1</junit.version>
         <assertj.version>3.21.0</assertj.version>
@@ -57,8 +60,20 @@
     <dependencies>
         <!--Test dependencies-->
         <dependency>
+            <groupId>io.carbynestack</groupId>
+            <artifactId>common-testing</artifactId>
+            <version>${common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
