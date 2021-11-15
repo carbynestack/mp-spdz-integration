@@ -10,11 +10,14 @@ import static io.carbynestack.mpspdz.integration.TestTriple.loadFromResources;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.carbynestack.testing.nullable.NullableParamSource;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 
 public class MpSpdzIntegrationUtilsTest {
   private static final Random RANDOM = new Random(42);
@@ -22,6 +25,10 @@ public class MpSpdzIntegrationUtilsTest {
   private static final BigInteger PRIME = new BigInteger("198766463529478683931867765928436695041");
   private static final BigInteger R = new BigInteger("141515903391459779531506841503331516415");
   private static final BigInteger R_INV = new BigInteger("133854242216446749056083838363708373830");
+
+  @SuppressWarnings("unused")
+  private static final Arguments OF = Arguments.of(PRIME, R, R_INV);
+
   private final MpSpdzIntegrationUtils mpSpdzIntegrationUtils =
       MpSpdzIntegrationUtils.of(PRIME, R, R_INV);
   private List<TestTriple> gfpTestData;
@@ -30,6 +37,13 @@ public class MpSpdzIntegrationUtilsTest {
   public void loadGfpData() throws Exception {
     gfpTestData =
         loadFromResources("/GfpTestData", "/BigIntTestData", mpSpdzIntegrationUtils.getPrime());
+  }
+
+  @ParameterizedTest
+  @NullableParamSource("OF")
+  void givenNullValuesWhenInvokingOfThenThrowNullPointerException(
+      BigInteger prime, BigInteger r, BigInteger rInv) {
+    assertThatThrownBy(() -> MpSpdzIntegrationUtils.of(prime, r, rInv));
   }
 
   @Test

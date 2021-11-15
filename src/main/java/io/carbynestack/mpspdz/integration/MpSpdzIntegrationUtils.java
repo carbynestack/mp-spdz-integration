@@ -18,6 +18,7 @@ public final class MpSpdzIntegrationUtils {
   /** The size of a word in the MP-SPDZ runtime. */
   public static final int WORD_WIDTH = 2 * LIMB_WIDTH;
   /** The size of a share (value, MAC) in the MP-SPDZ runtime. Equals two times the word width. */
+  @SuppressWarnings("unused")
   public static final int SHARE_WIDTH = 2 * WORD_WIDTH;
   /** Modulus N as used by the MP-SPDZ implementation */
   private final BigInteger prime;
