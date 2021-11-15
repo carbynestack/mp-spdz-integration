@@ -41,7 +41,7 @@ public class MpSpdzIntegrationUtilsTest {
 
   @ParameterizedTest
   @NullableParamSource("OF")
-  void givenNullValues_whenInvokingOf_thenThrowNullPointerException(
+  void givenNullValuesWhenInvokingOfThenThrowNullPointerException(
       BigInteger prime, BigInteger r, BigInteger rInv) {
     assertThatThrownBy(() -> MpSpdzIntegrationUtils.of(prime, r, rInv));
   }
