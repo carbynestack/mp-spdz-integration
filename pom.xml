@@ -5,27 +5,35 @@
   ~
   ~ SPDX-License-Identifier: Apache-2.0
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <artifactId>mp-spdz-integration</artifactId>
     <groupId>io.carbynestack</groupId>
     <version>${revision}</version>
     <name>Carbyne Stack MP-SPDZ Integration Utilities</name>
     <description>Integration utilities for MP-SPDZ MPC library</description>
+
     <licenses>
         <license>
             <name>Apache-2.0</name>
             <url>https://spdx.org/licenses/Apache-2.0.html</url>
         </license>
     </licenses>
-    <scm>
-        <connection>scm:git:https://github.com/carbynestack/${project.artifactId}.git</connection>
-        <developerConnection>scm:git:https://github.com/carbynestack/${project.artifactId}.git</developerConnection>
-        <url>https://github.com/carbynestack/${project.artifactId}</url>
-        <tag>HEAD</tag>
-    </scm>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>Github Packages</name>
+            <url>https://maven.pkg.github.com/carbynestack/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -33,6 +41,7 @@
             <url>https://maven.pkg.github.com/carbynestack/${project.artifactId}</url>
         </repository>
     </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -57,6 +66,7 @@
         <junit.version>5.8.1</junit.version>
         <assertj.version>3.21.0</assertj.version>
     </properties>
+
     <dependencies>
         <!--Test dependencies-->
         <dependency>
@@ -90,6 +100,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <resources>
             <resource>
@@ -178,6 +189,7 @@
             </plugin>
         </plugins>
     </build>
+    
     <profiles>
         <profile>
             <id>coverage</id>
