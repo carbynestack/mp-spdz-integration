@@ -4,8 +4,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-name: Artifacts
-on: push
+name: Build and test artifacts
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    branches:
+      - 'master'
 jobs:
   prepare:
     runs-on: ubuntu-20.04
@@ -35,8 +42,8 @@ jobs:
           servers: |
             [{
                 "id": "github",
-                "username": "${{ secrets.GHPR_USERNAME }}",
-                "password": "${{ secrets.GHPR_TOKEN }}"
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
       - name: Build with Maven
         run: mvn install -Dskip.tests --batch-mode --update-snapshots --no-transfer-progress
@@ -60,8 +67,8 @@ jobs:
           servers: |
             [{
                 "id": "github",
-                "username": "${{ secrets.GHPR_USERNAME }}",
-                "password": "${{ secrets.GHPR_TOKEN }}"
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
       - name: Run Tests
         run: mvn verify --activate-profiles coverage --batch-mode --no-transfer-progress
