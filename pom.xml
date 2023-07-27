@@ -12,7 +12,7 @@
 
     <artifactId>mp-spdz-integration</artifactId>
     <groupId>io.carbynestack</groupId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>Carbyne Stack MP-SPDZ Integration Utilities</name>
     <description>Integration utilities for MP-SPDZ MPC library</description>
 
